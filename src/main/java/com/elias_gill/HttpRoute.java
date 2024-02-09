@@ -1,15 +1,22 @@
 package com.elias_gill;
 
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.elias_gill.HttpProtocol.HttpRequest;
+import com.elias_gill.HttpProtocol.HttpResponse;
 import com.elias_gill.contract.HttpHandler;
 import com.elias_gill.contract.RequestType;
 
 public class HttpRoute {
     private Map<RequestType.Type, HttpHandler> handlers;
 
-    final void Handle(final HttpRequest req) {
+    public HttpRoute() {
+        this.handlers = new HashMap<RequestType.Type, HttpHandler>();
+    }
+
+    void Handle(final HttpRequest req, final OutputStream out) {
         final HttpHandler handler = handlers.get(req.type);
 
         if (handler == null) {
@@ -17,7 +24,7 @@ public class HttpRoute {
             return;
         }
 
-        handler.Handle(req);
+        handler.Handle(req, new HttpResponse.Builder(out));
     }
 
     public HttpRoute Get(final HttpHandler handler) {

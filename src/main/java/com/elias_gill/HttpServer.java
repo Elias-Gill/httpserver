@@ -12,6 +12,8 @@ import java.util.concurrent.Executors;
 
 import com.elias_gill.HttpParser.Parser;
 import com.elias_gill.HttpProtocol.HttpRequest;
+import com.elias_gill.HttpProtocol.HttpResponse;
+import com.elias_gill.HttpProtocol.HttpResponse.Builder;
 
 public class HttpServer {
     private Executor threadPool;
@@ -66,12 +68,12 @@ public class HttpServer {
                 final InputStream in = this.sock.getInputStream();
                 final OutputStream out = this.sock.getOutputStream();
 
-                final HttpRequest req = Parser.parseRequest(in, out);
-
+                // parse and extract the route
+                final HttpRequest req = Parser.parseRequest(in);
                 final HttpRoute route = this.routes.get(req.path);
 
                 if (route != null) {
-                    route.Handle(req);
+                    route.Handle(req, out);
                 } else {
                     // TODO: 404 "page not found" response
                     return;

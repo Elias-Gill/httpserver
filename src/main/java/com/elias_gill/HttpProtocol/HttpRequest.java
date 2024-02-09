@@ -1,13 +1,11 @@
 package com.elias_gill.HttpProtocol;
 
-import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.elias_gill.contract.RequestType;
 
 public class HttpRequest {
-    private PrintWriter output;
-
     public String path;
     public String version;
     public RequestType.Type type;
@@ -15,11 +13,23 @@ public class HttpRequest {
     private Map<String, String> headers;
     private String body;
 
-    public HttpRequest(PrintWriter out) {
-        this.output = out;
+    public HttpRequest() {
+        this.headers = new HashMap<String, String>();
     }
 
-    public void writeResponse(HttpResponse response) {
-        this.output.write(response.getResponse());
+    public String getHeader(String header) {
+        return headers.get(header.toLowerCase());
+    }
+
+    public void setHeader(String header, String value) {
+        this.headers.put(header.toLowerCase(), value);
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getBody() {
+        return body;
     }
 }
