@@ -1,30 +1,28 @@
 package com.elias_gill;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import com.elias_gill.HttpProtocol.HttpRequest;
+import com.elias_gill.HttpProtocol.HttpResponse;
+import com.elias_gill.contract.HttpHandler;
 
-/* 
- * The main function of our program start a multithreaded tcp server 
- * 
- */
 public class App {
-    public static void main(final String[] args) {
-        System.out.println("\nStarting TCP server...\n");
-        // threadpoool of http responders
-        final Executor threadPool = Executors.newFixedThreadPool(100);
+    public static void main(String[] args) {
+        HttpServer server = new HttpServer.Builder()
+                .withMaxConnections(20)
+                .withPort(8080)
+                .build();
 
-        try (ServerSocket sockServer = new ServerSocket(8080)) {
-            while (true) {
-                // tcp server socket
-                final Socket sock = sockServer.accept();
-                threadPool.execute(new HttpResponder(sock));
-            }
-        } catch (final IOException e) {
-            System.out.println("Cannot start tcp server: " + e.toString());
-            System.exit(1);
+        server.registerRoute("/", new HttpRoute()
+                .Get(new algo())
+                .Post(new algo()));
+
+        server.startServer();
+    }
+
+    private static class algo implements HttpHandler {
+        @Override
+        public HttpResponse Handle(HttpRequest req) {
+            System.out.println("funciona al parecer");
+            return new HttpResponse();
         }
     }
 }
