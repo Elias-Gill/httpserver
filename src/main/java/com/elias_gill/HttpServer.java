@@ -1,6 +1,5 @@
 package com.elias_gill;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -10,10 +9,10 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.elias_gill.HttpParser.Parser;
 import com.elias_gill.HttpProtocol.HttpRequest;
 import com.elias_gill.HttpProtocol.HttpResponse;
-import com.elias_gill.HttpProtocol.HttpResponse.Builder;
+import com.elias_gill.contract.HttpRoute;
+import com.elias_gill.parser.HttpParser;
 
 public class HttpServer {
     private Executor threadPool;
@@ -32,59 +31,63 @@ public class HttpServer {
     }
 
     public void startServer() {
-        System.out.println("\nStarting HTTP server...\n");
-
-        try (ServerSocket sockServer = new ServerSocket(this.port)) {
+        System.out.println("Starting server...\n");
+        try {
+            ServerSocket server = new ServerSocket(this.port);
             while (true) {
-                // tcp server socket
-                final Socket sock = sockServer.accept();
-
-                // passing the routes table to the new HttpConnection
-                this.threadPool.execute(
-                        new HttpConnection(sock, this.routes));
+                Socket sock = server.accept();
+                this.threadPool.execute(new HttpConnection(this.routes, sock));
             }
 
-        } catch (final IOException e) {
-            System.out.println("Cannot start http server: \n" + e.toString());
-            System.exit(1);
+        } catch (Exception e) {
+            System.out.println("Cannot start server: " + e);
         }
     }
 
     /**
-     * The http connection handler class.
-     * Implements Runnable to execute an httpRoute on this socket
+     * Handles the socket connection
      */
     private class HttpConnection implements Runnable {
-        Socket sock;
-        Map<String, HttpRoute> routes;
+        private Socket sock;
+        private Map<String, HttpRoute> routes;
 
-        public HttpConnection(final Socket sock, final Map<String, HttpRoute> routes) {
+        public static final String ANSI_RESET = "\u001B[0m";
+        public static final String ANSI_GREEN = "\u001B[32m";
+        public static final String ANSI_YELLOW = "\u001B[33m";
+
+        public HttpConnection(Map<String, HttpRoute> routes, Socket sock) {
             this.sock = sock;
             this.routes = routes;
         }
 
+        @Override
         public void run() {
             try {
-                final InputStream in = this.sock.getInputStream();
-                final OutputStream out = this.sock.getOutputStream();
+                InputStream in = sock.getInputStream();
+                OutputStream out = sock.getOutputStream();
 
-                // parse and extract the route
-                final HttpRequest req = Parser.parseRequest(in);
-                final HttpRoute route = this.routes.get(req.path);
+                System.out.println(ANSI_GREEN + "-- Request --" + ANSI_RESET);
 
-                if (route != null) {
-                    route.Handle(req, out);
-                } else {
-                    // TODO: 404 "page not found" response
+                HttpRequest req = HttpParser.parse(in);
+                HttpResponse resp = new HttpResponse(out);
+
+
+                System.out.println(ANSI_YELLOW + "-- Response --" + ANSI_RESET);
+
+                HttpRoute route = this.routes.get(req.getPath());
+                if (route == null) {
+                    resp.withStatus(404).send();
                     return;
                 }
 
+                route.handle(req, resp);
                 this.sock.close();
 
-            } catch (final IOException e) {
-                System.out.println("I/O error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Connection error: " + e);
             }
         }
+
     }
 
     /**

@@ -4,5 +4,5 @@ import com.elias_gill.HttpProtocol.HttpRequest;
 import com.elias_gill.HttpProtocol.HttpResponse;
 
 public interface HttpHandler {
-    public void Handle(HttpRequest req, HttpResponse.Builder respBuilder);
+    public void handle(HttpRequest req, HttpResponse resp);
 }

@@ -1,6 +1,5 @@
 package com.elias_gill.HttpProtocol;
 
-import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -9,19 +8,26 @@ import java.util.Map;
 public class HttpResponse {
     private PrintWriter output;
 
-    public String version;
-    public int status;
+    private String version;
+    private int status;
 
     private Map<String, String> headers;
-    public String body;
+    private String body;
 
-    private HttpResponse() {
+    /**
+     * Generates a new httpResponse which has a default status 400 (bad request)
+     */
+    public HttpResponse(OutputStream out) {
+        this.version = "1.1";
+        this.status = 400;
+        this.headers = new HashMap<String, String>();
+        this.output = new PrintWriter(out);
+        this.body = "";
     }
 
-    public void setHeader(String header, String value) {
-        this.headers.put(header, value);
-    }
-
+    /**
+     * Sends the request to the client
+     */
     public void send() {
         String heads = "";
         for (Map.Entry<String, String> entry : this.headers.entrySet()) {
@@ -34,41 +40,25 @@ public class HttpResponse {
                 heads,
                 this.body);
 
-        System.out.println(msg);
-
         this.output.write(msg);
         this.output.flush();
+
+        System.out.println(msg);
     }
 
-    public static class Builder {
-        private HttpResponse resp;
+    public void setHeader(String header, String value) {
+        this.headers.put(header, value);
+    }
 
-        public Builder(OutputStream out) {
-            this.resp = new HttpResponse();
-            this.resp.version = "1.1";
-            this.resp.headers = new HashMap<String, String>();
-            this.resp.output = new PrintWriter(out);
-        }
+    public HttpResponse withStatus(int status) {
+        this.status = status;
+        return this;
+    }
 
-        public HttpResponse build() {
-            return this.resp;
-        }
+    public HttpResponse withBody(String body) {
+        this.body = "\r\n\r\n" + body;
+        this.setHeader("Content-Length", String.format("%d", body.length()));
+        return this;
 
-        public Builder withStatus(int status) {
-            this.resp.status = status;
-            return this;
-        }
-
-        public Builder withBody(String body) {
-            this.resp.body = "\r\n\r\n" + body;
-            this.resp.setHeader("Content-Length", String.format("%d", body.length()));
-            return this;
-
-        }
-
-        public Builder withHeaders(Map<String, String> headers) {
-            this.resp.headers = headers;
-            return this;
-        }
     }
 }

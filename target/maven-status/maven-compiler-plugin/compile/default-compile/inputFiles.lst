@@ -1,8 +1,8 @@
+/home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/contract/HttpRoute.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/HttpProtocol/HttpRequest.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/contract/RequestType.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/contract/HttpHandler.java
-/home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/HttpParser/Parser.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/HttpServer.java
+/home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/parser/HttpParser.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/App.java
 /home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/HttpProtocol/HttpResponse.java
-/home/elias/Documentos/java_proyects/httpserver/src/main/java/com/elias_gill/HttpRoute.java
