@@ -6,21 +6,21 @@ import com.elias_gill.HttpProtocol.HttpResponse;
 public abstract class HttpRoute implements HttpHandler {
     final public void handle(HttpRequest req, HttpResponse resp) {
         switch (req.getType()) {
-            case GET:
-                this.GET(req, resp);
-                return;
-            case POST:
-                this.POST(req, resp);
-                return;
-            case PUT:
-                this.PUT(req, resp);
-                return;
-            case DELETE:
-                this.DELETE(req, resp);
-                return;
-            default:
-                this.invalid(req, resp);
-                return;
+        case GET:
+            this.GET(req, resp);
+            return;
+        case POST:
+            this.POST(req, resp);
+            return;
+        case PUT:
+            this.PUT(req, resp);
+            return;
+        case DELETE:
+            this.DELETE(req, resp);
+            return;
+        default:
+            this.invalid(req, resp);
+            return;
         }
     }
 

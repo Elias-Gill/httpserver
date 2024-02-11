@@ -71,7 +71,6 @@ public class HttpServer {
                 HttpRequest req = HttpParser.parse(in);
                 HttpResponse resp = new HttpResponse(out);
 
-
                 System.out.println(ANSI_YELLOW + "-- Response --" + ANSI_RESET);
 
                 HttpRoute route = this.routes.get(req.getPath());

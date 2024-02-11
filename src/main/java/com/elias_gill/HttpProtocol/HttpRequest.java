@@ -18,7 +18,7 @@ public class HttpRequest {
         this.body = "";
     }
 
-    // -- Setters and getters -- 
+    // -- Setters and getters --
 
     public String getHeader(String header) {
         return headers.get(header.toLowerCase());

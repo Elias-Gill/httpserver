@@ -34,11 +34,7 @@ public class HttpResponse {
             heads += String.format("\r\n%s: %s", entry.getKey(), entry.getValue());
         }
 
-        String msg = String.format(
-                "HTTP/%s %d%s%s",
-                this.version, this.status,
-                heads,
-                this.body);
+        String msg = String.format("HTTP/%s %d%s%s", this.version, this.status, heads, this.body);
 
         this.output.write(msg);
         this.output.flush();
