@@ -15,7 +15,6 @@ public class HttpRequest {
 
     public HttpRequest() {
         this.headers = new HashMap<String, String>();
-        this.body = "";
     }
 
     // -- Setters and getters --
@@ -25,7 +24,7 @@ public class HttpRequest {
     }
 
     public void setHeader(String header, String value) {
-        this.headers.put(header.toLowerCase(), value);
+        this.headers.put(header.toLowerCase().trim(), value.trim());
     }
 
     public void setBody(String body) {
@@ -59,13 +58,4 @@ public class HttpRequest {
     public void setType(RequestType.Type type) {
         this.type = type;
     }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
-    }
-
 }
