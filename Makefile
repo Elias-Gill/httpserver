@@ -1,3 +1,4 @@
+.PHONY: run test
 
 run:
 	mvn compile exec:java -Dexec.mainClass=com.elias_gill.App
@@ -5,4 +6,5 @@ run:
 test:
 	mvn test
 
-.PHONY: run
+format:
+	mvn formatter:format
