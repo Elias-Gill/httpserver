@@ -23,10 +23,8 @@ class HttpParserTest {
     @Test
     @DisplayName("Test http request parser")
     void testParser() {
-        String msg = "GET / HTTP/1.1\r\n" +
-                "content-length: 13\r\n" +
-                "content-type: html/txt\r\n" +
-                "\r\nhola que hace";
+        String msg = "GET / HTTP/1.1\r\n" + "content-length: 13\r\n" + "content-type: html/txt\r\n"
+                + "\r\nhola que hace";
 
         InputStream in = new ByteArrayInputStream(msg.getBytes());
         HttpRequest req = HttpParser.parse(in);

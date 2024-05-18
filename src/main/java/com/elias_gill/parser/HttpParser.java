@@ -20,7 +20,7 @@ public class HttpParser {
             // generate a scanner and parse the request
             Scanner sc = new Scanner(new String(cbuf));
 
-            // -- parse request info -- 
+            // -- parse request info --
             if (!sc.hasNextLine()) {
                 // TODO: empty request
                 return null;
@@ -34,7 +34,7 @@ public class HttpParser {
             // INFO: print reques info
             System.out.println(String.format("%s %s %s", req.getType(), req.getPath(), req.getVersion()));
 
-            // -- parse headers -- 
+            // -- parse headers --
             if (!sc.hasNextLine()) {
                 return req;
             }
@@ -53,7 +53,7 @@ public class HttpParser {
                 line = sc.nextLine();
             }
 
-            // -- parse body -- 
+            // -- parse body --
             String body = "";
             while (sc.hasNextLine()) {
                 line = sc.nextLine();
